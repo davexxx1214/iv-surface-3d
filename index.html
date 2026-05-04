@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IV Surface 3D</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/src/styles.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "/node_modules/three/build/three.module.js",
+          "three/addons/": "/node_modules/three/examples/jsm/"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <main class="shell">
+      <header class="terminal-header" aria-label="IV Surface controls">
+        <div class="brand-block">
+          <div>
+            <h1>IV Surface 3D</h1>
+            <p>Historical options chain viewer powered by Alpha Vantage</p>
+          </div>
+          <span id="sourceBadge" class="status-badge">Idle</span>
+        </div>
+
+        <form id="controlForm" class="control-strip">
+          <label>
+            <span>Ticker</span>
+            <select id="symbolInput" name="symbol"></select>
+          </label>
+          <label>
+            <span>Snapshot</span>
+            <input id="dateInput" name="date" type="date" />
+          </label>
+          <label>
+            <span>Surface</span>
+            <select id="surfaceMode" name="surfaceMode">
+              <option value="avg">Average IV</option>
+              <option value="call">Call IV</option>
+              <option value="put">Put IV</option>
+            </select>
+          </label>
+          <button id="resetCamera" class="secondary-action" type="button">Reset View</button>
+        </form>
+      </header>
+
+      <section class="metrics-grid" aria-label="Surface statistics">
+        <article>
+          <span>到期日</span>
+          <strong id="expirationCount">--</strong>
+        </article>
+        <article>
+          <span>IV 点数</span>
+          <strong id="pointCount">--</strong>
+        </article>
+        <article>
+          <span>平均 IV</span>
+          <strong id="averageIv">--</strong>
+        </article>
+        <article>
+          <span>IV 区间</span>
+          <strong id="ivRange">--</strong>
+        </article>
+        <article>
+          <span>行权价</span>
+          <strong id="strikeRange">--</strong>
+        </article>
+      </section>
+
+      <section class="workspace">
+        <div class="surface-panel">
+          <div class="panel-copy">
+            <h2>3D IV Surface</h2>
+            <p id="panelSubtitle">Drag to rotate, scroll to zoom, hover to inspect IV points.</p>
+          </div>
+          <div id="scene" class="scene" role="img" aria-label="3D implied volatility surface"></div>
+          <div id="tooltip" class="tooltip" hidden></div>
+          <div id="loadingOverlay" class="loading-overlay" hidden>
+            <div class="loading-pulse"></div>
+            <span>Loading option chain</span>
+          </div>
+        </div>
+
+        <aside class="chain-panel" aria-label="Option chain table">
+          <div class="panel-copy">
+            <h2>Chain Slice</h2>
+            <p id="chainSubtitle">Latest normalized records from the selected snapshot.</p>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th><button type="button" data-sort="expiration">Expiry</button></th>
+                  <th><button type="button" data-sort="dte">DTE</button></th>
+                  <th><button type="button" data-sort="strike">Strike</button></th>
+                  <th><button type="button" data-sort="callIv">Call IV</button></th>
+                  <th><button type="button" data-sort="putIv">Put IV</button></th>
+                  <th><button type="button" data-sort="avgIv">Avg IV</button></th>
+                </tr>
+              </thead>
+              <tbody id="chainBody"></tbody>
+            </table>
+          </div>
+        </aside>
+      </section>
+    </main>
+
+    <script type="module" src="/src/app.js"></script>
+  </body>
+</html>
